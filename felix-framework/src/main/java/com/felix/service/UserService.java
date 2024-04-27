@@ -2,6 +2,7 @@ package com.felix.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.felix.domain.ResponseResult;
+import com.felix.domain.dto.UserDto;
 import com.felix.domain.entity.User;
 
 /**
@@ -17,5 +18,9 @@ public interface UserService extends IService<User> {
     ResponseResult updateUserInfo(User user);
 
     ResponseResult register(User user);
+
+    ResponseResult getUserList(Integer pageNum, Integer pageSize, UserDto userDto);
+
+    ResponseResult deleteUserById(Long id);
 }
 

@@ -55,7 +55,7 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
             e.printStackTrace();
             //token超时 token非法
             //响应告诉前端需要重新登陆
-            ResponseResult result = ResponseResult.okResult(AppHttpCodeEnum.NEED_LOGIN);
+            ResponseResult result = ResponseResult.errorResult(AppHttpCodeEnum.NEED_LOGIN);
             WebUtils.renderString(httpServletResponse, JSON.toJSONString(result));
             return;
         }

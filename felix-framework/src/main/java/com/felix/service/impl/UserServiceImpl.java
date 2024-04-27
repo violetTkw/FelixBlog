@@ -1,9 +1,12 @@
 package com.felix.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.felix.domain.ResponseResult;
+import com.felix.domain.dto.UserDto;
 import com.felix.domain.entity.User;
+import com.felix.domain.vo.PageVo;
 import com.felix.domain.vo.UserInfoVo;
 import com.felix.enums.AppHttpCodeEnum;
 import com.felix.exception.SystemException;
@@ -24,6 +27,8 @@ import org.springframework.util.StringUtils;
  */
 @Service("userService")
 public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements UserService {
+    @Autowired
+    private UserMapper userMapper;
 
     @Override
     public ResponseResult userInfo() {
@@ -77,6 +82,37 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         user.setPassword(encodePassword);
         //存入数据库
         save(user);
+        return ResponseResult.okResult();
+    }
+
+    @Override
+    public ResponseResult getUserList(Integer pageNum, Integer pageSize, UserDto userDto) {
+        //可以根据用户名模糊搜索。
+        //可以进行手机号的搜索。
+        //可以进行状态的查询。
+        LambdaQueryWrapper<User> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.like(StringUtils.hasText(userDto.getUserName()),User::getUserName,userDto.getUserName());
+        queryWrapper.eq(StringUtils.hasText(userDto.getPhoneNumber()),User::getPhoneNumber,userDto.getPhoneNumber());
+        queryWrapper.eq(StringUtils.hasText(userDto.getStatus()),User::getStatus,userDto.getStatus());
+        //分页查询
+        Page<User> page = new Page<>();
+        page(page,queryWrapper);
+        page.setCurrent(pageNum);
+        page.setSize(pageSize);
+        PageVo pageVo = new PageVo(page.getRecords(),page.getTotal());
+        return ResponseResult.okResult(pageVo);
+    }
+
+    @Override
+    public ResponseResult deleteUserById(Long id) {
+        //不能删除当前操作的用户
+        LambdaQueryWrapper<User> queryWrapper = new LambdaQueryWrapper<>();
+        //获取当前操作的用户Id
+        Long userId = SecurityUtils.getLoginUser().getUser().getId();
+        if(userId.equals(id)){
+            return ResponseResult.errorResult(AppHttpCodeEnum.SYSTEM_ERROR,"不能删除当前操作的用户");
+        }
+        userMapper.deleteById(id);
         return ResponseResult.okResult();
     }
 

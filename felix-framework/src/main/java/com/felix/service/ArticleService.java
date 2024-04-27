@@ -2,7 +2,10 @@ package com.felix.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.felix.domain.ResponseResult;
+import com.felix.domain.dto.ArticleListDto;
+import com.felix.domain.dto.UpdateArticleDto;
 import com.felix.domain.entity.Article;
+import com.felix.domain.dto.AddArticleDto;
 
 /**
  * ClassName:ArticleService
@@ -21,5 +24,15 @@ public interface ArticleService extends IService<Article> {
     ResponseResult getArticleDetail(Long id);
 
     ResponseResult updateViewCount(Long id);
+
+    ResponseResult addArticle(AddArticleDto addArticleDto);
+
+    ResponseResult getArticleList(Integer pageNum, Integer pageSize, ArticleListDto articleListDto);
+
+    ResponseResult getArticleDetailById(Long id);
+
+    ResponseResult updateArticle(UpdateArticleDto updateArticleDto);
+
+    ResponseResult deleteArticle(Long id);
 }
 

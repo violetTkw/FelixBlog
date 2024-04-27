@@ -44,4 +44,6 @@ public class SystemConstants {
     //第一层菜单
     public static final Long MENU_PARENT_ID=0L;
     public static final String ADMIN = "1";
+    //正常状态
+    public static final String NORMAL = "0";
 }

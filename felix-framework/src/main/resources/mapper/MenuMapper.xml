@@ -30,8 +30,7 @@
         WHERE m.`menu_type` IN ('C', 'M')
           AND m.`status` = 0
           AND m.`del_flag` = 0
-        ORDER BY
-            m.parent_id,m.order_num
+        ORDER BY m.parent_id, m.order_num
     </select>
     <select id="selectRouterMenuTreeByUserId" resultType="com.felix.domain.entity.Menu">
         SELECT DISTINCT m.id,
@@ -55,5 +54,22 @@
           AND m.`status` = 0
           AND m.`del_flag` = 0
         ORDER BY m.parent_id, m.order_num
+    </select>
+    <select id="selectLabel" resultType="com.felix.domain.entity.Menu">
+        SELECT DISTINCT m.id,
+                        m.parent_id,
+                        m.menu_name
+        FROM `sys_menu` m
+        WHERE m.`menu_type` IN ('C', 'M')
+          AND m.`status` = 0
+          AND m.`del_flag` = 0
+    </select>
+    <select id="selectMenuIdByRoleId" resultType="java.lang.Long">
+        SELECT DISTINCT m.id
+        FROM `sys_menu` m
+                 JOIN `sys_role_menu` srm ON m.id = srm.menu_id
+        WHERE srm.role_id = #{id}
+          AND m.`status` = 0
+          AND m.`del_flag` = 0
     </select>
 </mapper>
